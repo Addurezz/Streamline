@@ -1,0 +1,23 @@
+@startuml
+left to right direction
+
+actor Benutzer as User
+actor "Externe API" as API
+
+rectangle {
+    (erstelle Knoten/Triggers) as Node
+    (erstelle Actions) as Action
+    (verbinde Trigger und Action) as Connect
+    (erstelle Conditionals) as Conditional
+    (externe Information bereitstellen) as Extern
+    (Actions ausführen) as Execute
+}
+
+User --> Node
+User --> Action
+User --> Connect
+User --> Conditional
+API --> Extern
+Action ..> Extern : <<extend>>
+Action ..> Execute : <<extend>>
+@enduml
