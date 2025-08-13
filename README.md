@@ -27,7 +27,7 @@ git clone https://github.com/yourname/streamline.git
 cd streamline
 dotnet build
 dotnet run
-
+```
 How it works: 
 - Create Triggers (set how often the app should update)
 - Create Actions
