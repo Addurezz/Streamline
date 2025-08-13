@@ -29,6 +29,7 @@ package WorkflowService {
     class RunningState
     class PausedState
     class InactiveState
+    class ActiveState
     
     class WorkflowContext {
         +Context : Dictionary<string, object>
@@ -49,6 +50,7 @@ package WorkflowService {
 IWorkflowState <|.. RunningState
 IWorkflowState <|.. PausedState
 IWorkflowState <|.. InactiveState
+IWorkflowState <|.. ActiveState
  
 Workflow o-- WorkflowContext
 Workflow *-- IWorkflowState
