@@ -1,4 +1,9 @@
 # Streamline - A modular workflow automation platform for custom business processes
+![Banner](docs/banner.png)
+
+![License](https://img.shields.io/github/license/yourname/streamline)
+![Build](https://img.shields.io/github/actions/workflow/status/yourname/streamline/build.yml)
+![Version](https://img.shields.io/github/v/release/yourname/streamline)
 
 Streamline is a sandbox-like, drag-and-drop workflow automation tool that lets users create graph-like, event-driven automation pipelines.
 
@@ -7,19 +12,19 @@ Simply create an event (trigger) and one or more actions, connect them visually,
 Targeted at small businesses and individuals who want to automate repetitive tasks without deep technical knowledge — from sending context-aware auto-replies to organizing files.
 
 
-Features:
-- Visual Workflow builder
-- Custom Triggers and Actions
-- Event-Driven Architecture
+## ✨ Features
+- 🔗 **Visual Workflow Builder** – Connect triggers, actions, and conditions
+- ⚡ **Event-Driven Automation** – Runs instantly when triggers fire
+- 🧩 **Modular & Extensible** – Add your own components
 
 Example Use Cases:
 - Automatic, context-aware response to emails/messages
 - move Files/Folders to a specified location based on names
 
-Installation & Setup:
+## 🚀 Quick Start
+```bash
 git clone https://github.com/yourname/streamline.git
 cd streamline
-# Install dependencies (add specific instructions)
 dotnet build
 dotnet run
 
