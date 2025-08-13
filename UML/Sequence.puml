@@ -1,6 +1,9 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
+WorkflowManager -> Workflow : Registriere Trigger
+Workflow --> Trigger : Füge Workflow dem Trigger hinzu
+
 Trigger -> WorkflowManager : Event getriggert
 WorkflowManager -> Workflow : Starte Workflow
 WorkflowManager -> Workflow : Ändere State
