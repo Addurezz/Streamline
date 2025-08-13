@@ -1,0 +1,29 @@
+@startuml
+package TriggerService {
+    class Trigger {
+        +Condition : Decision
+        +Trigger(condition Decision)
+        +WorkflowList : List<Workflow>
+        +UpdateTime : TimeUnit
+        +Execute() : void
+        +OnNotify() : void
+    }
+    
+    class TriggerManager {
+        +Triggers : List<Trigger>
+        +RegisterTrigger(trigger : Trigger)
+        +RemoveTrigger(trigger : Trigger)
+        +NotifyTriggers()
+    }
+    
+    enum TimeUnit {
+        HOURS
+        MINUTES
+        SECONDS
+        DAYS
+    }
+}
+
+TriggerManager "1" o-- "0..*" Trigger
+Trigger "0..*" *-- "1" TimeUnit
+@enduml

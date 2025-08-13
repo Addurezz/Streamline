@@ -36,13 +36,6 @@ package WorkflowService {
         +ExecutionLog : List<string>
         +Log(m : String) : void
     }
-    
-    class Trigger {
-        +Condition : Decision
-        +Trigger(condition Decision)
-        +WorkflowList : List<Workflow>
-        +Execute() : void
-    }
 }
 
 
@@ -55,5 +48,4 @@ IWorkflowState <|.. ActiveState
 Workflow o-- WorkflowContext
 Workflow *-- IWorkflowState
 WorkflowManager .. "<<uses>>" Workflow
-Trigger .. "<<uses>>" WorkflowManager
 @enduml
