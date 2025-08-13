@@ -1,0 +1,97 @@
+@startuml
+
+package NodeCreationService {
+    interface INode {
+        -Next : List<INode>
+        +Execute(context : WorkflowContext) : void
+    }
+    interface ActionNode {
+        
+    }
+
+    class EndNode
+    class DecisionNode {
+        +TrueNext : List<INode>
+        +FalseNext : List<INode>
+        +Condition : Decision
+    }
+    
+    class SingleDecision {
+         + Evaluate() : bool
+    }
+    
+    class MultiDecision {
+        +DecisionList : List<SingleDecision>
+        +Evaluate() : bool
+    }
+    
+    class Decision {
+        +Evaluate() : bool
+    }
+
+}
+package WorkflowService {
+    class WorkflowManager {
+        +Execute(workflow : Workflow) : void
+        +Pause(workflow : Workflow) : void
+        +Resume(workflow : Workflow) : void
+        +Stop(workflow : Workflow) : void
+        +RegisterTrigger(workflow : Workflow, trigger Trigger) : void
+        +ChangeState(workflow : Workflow, state : WorkflowState) : void
+    }
+    
+    class Workflow {
+        +CurrentNode : INode
+        +Context : WorkflowContext
+        +State : IWorkflowState
+        +StartNode : StartNode
+        +Pause() : void
+        +Start() : void
+        +Resume() : void
+        +Stop() : void
+    }
+    interface IWorkflowState {
+        +Start(workflow : Workflow)
+        +Stop(workflow : Workflow)
+        +Pause(workflow : Workflow)
+        +Resume(workflow : Workflow)
+    }
+    
+    class RunningState
+    class PausedState
+    class InactiveState
+    
+    class WorkflowContext {
+        +Context : Dictionary<string, object>
+        +ExecutionLog : List<string>
+        +Log(m : String) : void
+    }
+    
+    class Trigger {
+        +Condition : Decision
+        +Trigger(condition Decision)
+        +WorkflowList : List<Workflow>
+        +Execute() : void
+    }
+}
+
+
+INode <|.. EndNode
+INode <|.. ActionNode
+INode <|.. DecisionNode
+
+IWorkflowState <|.. RunningState
+IWorkflowState <|.. PausedState
+IWorkflowState <|.. InactiveState
+ 
+Workflow o-- WorkflowContext
+Workflow *-- IWorkflowState
+WorkflowManager .. "<<uses>>" Workflow
+Workflow .. "<<uses>>" INode
+Trigger .. "<<uses>>" WorkflowManager
+
+DecisionNode o-- Decision
+Decision <|-- SingleDecision 
+Decision <|-- MultiDecision
+MultiDecision o-- SingleDecision
+@enduml
