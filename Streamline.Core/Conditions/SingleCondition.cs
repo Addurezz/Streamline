@@ -1,6 +1,6 @@
 using Streamline.Core.Workflow.WorkflowContext;
 
-namespace Streamline.Core.Decisions;
+namespace Streamline.Core.Conditions;
 
 public class SingleCondition : Condition
 {

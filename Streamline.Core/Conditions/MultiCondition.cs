@@ -1,4 +1,4 @@
-namespace Streamline.Core.Decisions;
+namespace Streamline.Core.Conditions;
 
 public class MultiCondition : Condition
 {
