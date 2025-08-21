@@ -7,7 +7,7 @@ public class DecisionNode : INode
 {
     private List<INode> _trueNext = new List<INode>();
     private List<INode> _falseNext = new List<INode>();
-    private Decision decision;
+    private Condition _condition;
     
     public void Execute(IContext context)
     {
