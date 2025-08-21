@@ -2,11 +2,15 @@ namespace Streamline.Core.Workflow;
 
 public class WorkflowManager
 {
-    public WorkflowManager Instance { get; }
+    private WorkflowManager? _instance;
 
-    private WorkflowManager()
+    private WorkflowManager() { }
+
+    public WorkflowManager GetInstance()
     {
-        Instance = new WorkflowManager();
+        if (_instance is null) _instance = new WorkflowManager();
+
+        return _instance;
     }
     
     public void Start(Workflow w)
