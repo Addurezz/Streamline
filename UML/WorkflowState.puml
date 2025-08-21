@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+[*] -> Inactive
+Inactive -> Active
+
+Active -> Inactive
+Active -> Running
+Running -> Paused
+Running -> Active
+Paused -> Running
+Paused -> Inactive
+
+@enduml

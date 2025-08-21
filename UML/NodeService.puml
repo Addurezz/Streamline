@@ -1,0 +1,40 @@
+@startuml
+package NodeService {
+    interface INode {
+        -Next : List<INode>
+        +Execute(context : WorkflowContext) : void
+    }
+    interface ActionNode {
+        
+    }
+
+    class EndNode
+    class DecisionNode {
+        +TrueNext : List<INode>
+        +FalseNext : List<INode>
+        +Condition : Decision
+    }
+    
+    class SingleDecision {
+         + Evaluate() : bool
+    }
+    
+    class MultiDecision {
+        +DecisionList : List<SingleDecision>
+        +Evaluate() : bool
+    }
+    
+    class Decision {
+        +Evaluate() : bool
+    }
+
+}
+
+INode <|.. EndNode
+INode <|.. ActionNode
+INode <|.. DecisionNode
+DecisionNode o-- Decision
+Decision <|-- SingleDecision 
+Decision <|-- MultiDecision
+MultiDecision o-- SingleDecision
+@enduml

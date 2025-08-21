@@ -1,0 +1,51 @@
+@startuml
+package WorkflowService {
+    class WorkflowManager {
+        +Execute(workflow : Workflow) : void
+        +Pause(workflow : Workflow) : void
+        +Resume(workflow : Workflow) : void
+        +Stop(workflow : Workflow) : void
+        +RegisterTrigger(workflow : Workflow, trigger Trigger) : void
+        +ChangeState(workflow : Workflow, state : WorkflowState) : void
+    }
+    
+    class Workflow {
+        +CurrentNode : INode
+        +Context : WorkflowContext
+        +State : IWorkflowState
+        +StartNode : StartNode
+        +Pause() : void
+        +Start() : void
+        +Resume() : void
+        +Stop() : void
+    }
+    interface IWorkflowState {
+        +Start(workflow : Workflow)
+        +Stop(workflow : Workflow)
+        +Pause(workflow : Workflow)
+        +Resume(workflow : Workflow)
+    }
+    
+    class RunningState
+    class PausedState
+    class InactiveState
+    class ActiveState
+    
+    class WorkflowContext {
+        +Context : Dictionary<string, object>
+        +ExecutionLog : List<string>
+        +Log(m : String) : void
+    }
+}
+
+
+
+IWorkflowState <|.. RunningState
+IWorkflowState <|.. PausedState
+IWorkflowState <|.. InactiveState
+IWorkflowState <|.. ActiveState
+ 
+Workflow o-- WorkflowContext
+Workflow *-- IWorkflowState
+WorkflowManager .. "<<uses>>" Workflow
+@enduml

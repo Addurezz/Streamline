@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+WorkflowManager -> Workflow : Registriere Trigger
+Workflow --> Trigger : Füge Workflow dem Trigger hinzu
+
+Trigger -> WorkflowManager : Event getriggert
+WorkflowManager -> Workflow : Starte Workflow
+WorkflowManager -> Workflow : Ändere State
+Workflow -> Workflow : Setze State
+Workflow -> Workflow : Setze Context
+
+Workflow -> ActionNode : Starte Traversierung
+ActionNode -> ActionNode : Führe Befehle aus
+ActionNode -> DecisionNode : Rufe nächste Node auf
+DecisionNode -> DecisionNode : Evaluiere Bedingung
+DecisionNode -> ActionNode : Rufe Node je nach Bedingung auf
+ActionNode -> ActionNode : Führe Befehle aus
+ActionNode -> EndNode : Rufe nächste Node auf
+EndNode -> EndNode : Beende Traversierung
+WorkflowManager -> WorkflowManager : Beende Workflow
+WorkflowManager -> Workflow : Ändere State
+Workflow -> Workflow : Setze State
+@enduml
