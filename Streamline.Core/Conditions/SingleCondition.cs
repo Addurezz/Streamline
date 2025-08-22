@@ -4,15 +4,15 @@ namespace Streamline.Core.Conditions;
 
 public class SingleCondition : Condition
 {
-    private Func<IContext, bool> _ConditionCheck;
+    public Func<IContext, bool> DecisionCheck { get; set; }
+
+    public SingleCondition(Func<IContext, bool> c)
+    {
+        DecisionCheck = c;
+    }
     
-    public override bool Evaluate()
+    public override bool Evaluate(IContext context)
     {
         throw new NotImplementedException();
-    }
-
-    public void SetCondition(Func<IContext, bool> c)
-    {
-        
     }
 }
