@@ -7,6 +7,6 @@ public interface IContext
     public void Edit(String str, Object obj);
     public void Add_Or_Edit(String str, Object obj);
     public void Remove(String str);
-    public void Get(String str);
+    public Object Get(String str);
     public void Log(String m);
 }

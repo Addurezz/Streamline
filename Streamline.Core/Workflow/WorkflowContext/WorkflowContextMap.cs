@@ -22,7 +22,7 @@ public class WorkflowContextMap : IContext
         throw new NotImplementedException();
     }
 
-    public void Get(string str)
+    public Object Get(string str)
     {
         throw new NotImplementedException();
     }
