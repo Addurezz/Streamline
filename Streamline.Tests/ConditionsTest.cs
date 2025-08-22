@@ -7,6 +7,7 @@ public class ConditionsTest
 {
     public Func<IContext, bool> TestConditionTrue = (context) => true;
     public Func<IContext, bool> TestConditionFalse = (context) => false;
+    public IContext Context = new WorkflowContextMap();
     
     [Fact]
     public void SingleCondition_DecisionIsNull()
@@ -26,7 +27,7 @@ public class ConditionsTest
     public void SingleCondition_EvaluateAlwaysTrue()
     {
         Condition s = new SingleCondition(TestConditionTrue);
-        Assert.True(s.Evaluate());
+        Assert.True(s.Evaluate(Context));
     }
     
     [Fact]
@@ -34,7 +35,7 @@ public class ConditionsTest
     {
         IContext context = new WorkflowContextMap();
         Condition s = new SingleCondition(TestConditionFalse);
-        Assert.False(s.Evaluate());
+        Assert.False(s.Evaluate(Context));
     }
 
     [Fact]
@@ -69,7 +70,7 @@ public class ConditionsTest
         SingleCondition s = new SingleCondition(TestConditionTrue);
         m.Conditions.Add(s);
         
-        Assert.True(m.Evaluate());
+        Assert.True(m.Evaluate(Context));
     } 
     
     [Fact]
@@ -79,7 +80,7 @@ public class ConditionsTest
         SingleCondition s = new SingleCondition(TestConditionFalse);
         m.Conditions.Add(s);
         
-        Assert.True(m.Evaluate());
+        Assert.True(m.Evaluate(Context));
     } 
     
     [Fact]
@@ -91,7 +92,19 @@ public class ConditionsTest
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.True(m.Evaluate());
+        Assert.True(m.Evaluate(Context));
+    } 
+    
+    [Fact]
+    public void MultiCondition_EvaluateConditionsIsFalse()
+    {
+        MultiCondition m = new MultiCondition();
+        SingleCondition s = new SingleCondition(TestConditionFalse);
+        SingleCondition st = new SingleCondition(TestConditionFalse);
+        m.Conditions.Add(s);
+        m.Conditions.Add(st);
+        
+        Assert.True(m.Evaluate(Context));
     } 
     
     [Fact]
@@ -103,6 +116,34 @@ public class ConditionsTest
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.True(m.Evaluate());
-    } 
+        Assert.True(m.Evaluate(Context));
+    }
+
+    [Fact]
+    public void MultiCondition_AddConditionArgumentIsNull()
+    {
+        MultiCondition m = new MultiCondition();
+        Assert.Throws<NullReferenceException>(() => m.AddCondition(null));
+    }
+    
+    [Fact]
+
+    public void MultiCondition_AddConditionCorrectlyInsertsSingleCondition()
+    {
+        MultiCondition m = new MultiCondition();
+        SingleCondition s = new SingleCondition(TestConditionTrue);
+        m.AddCondition(s);
+        Assert.Contains(s, m.Conditions);
+    }
+
+    [Fact]
+    public void MultiCondition_AddConditionArgumentExistsAlready()
+    {
+        MultiCondition m = new MultiCondition();
+        SingleCondition s = new SingleCondition(TestConditionTrue);
+        m.AddCondition(s);
+        m.AddCondition(s);
+        Assert.Contains(s, m.Conditions);
+        Assert.True(m.Conditions.Count == 2);
+    }
 }
