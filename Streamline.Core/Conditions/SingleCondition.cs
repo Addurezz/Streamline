@@ -8,11 +8,20 @@ public class SingleCondition : Condition
 
     public SingleCondition(Func<IContext, bool> c)
     {
+        if (c is null)
+            throw new ArgumentNullException();
         DecisionCheck = c;
     }
     
     public override bool Evaluate(IContext context)
     {
-        throw new NotImplementedException();
+        if (context is null) throw new ArgumentNullException();
+        return DecisionCheck(context);
     }
+
+    public void SetDecision(Func<IContext, bool> func)
+    {
+        if (func is null) throw new ArgumentNullException();
+        DecisionCheck = func;
+    } 
 }
