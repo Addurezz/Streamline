@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Streamline.Core.Conditions;
 using Streamline.Core.Workflow.WorkflowContext;
 namespace Streamline.Tests;
@@ -12,7 +13,7 @@ public class ConditionsTest
     [Fact]
     public void SingleCondition_DecisionIsNull()
     {
-        Assert.Throws<NullReferenceException>(() => new SingleCondition(null));
+        Assert.Throws<ArgumentNullException>(() => new SingleCondition(null));
     }
 
     [Fact]
@@ -20,7 +21,7 @@ public class ConditionsTest
     {
         
         SingleCondition s = new SingleCondition(TestConditionTrue);
-        Assert.Throws<NullReferenceException>(() => s.DecisionCheck = null);
+        Assert.Throws<ArgumentNullException>(() => s.SetDecision(null));
     }
 
     [Fact]
@@ -45,10 +46,21 @@ public class ConditionsTest
         context.Add("x", 3);
         context.Add("y", 4);
 
-        Func<IContext, bool> fn = (_context) =>
+        Func<IContext, bool> fn = (c) =>
         {
-            return (int)_context.Get("x") + (int)_context.Get("y") == 7;
+            return (int)c.Get("x") + (int)c.Get("y") == 7;
         };
+
+        SingleCondition s = new SingleCondition(fn);
+        
+        Assert.True(s.Evaluate(context));
+    }
+
+    [Fact]
+    public void SingleDecision_EvaluateArgumentIsNull()
+    {
+        SingleCondition s = new SingleCondition(TestConditionFalse);
+        Assert.Throws<ArgumentNullException>(() => s.Evaluate(null));
     }
 
     [Fact]
@@ -80,7 +92,7 @@ public class ConditionsTest
         SingleCondition s = new SingleCondition(TestConditionFalse);
         m.Conditions.Add(s);
         
-        Assert.True(m.Evaluate(Context));
+        Assert.False(m.Evaluate(Context));
     } 
     
     [Fact]
@@ -104,7 +116,7 @@ public class ConditionsTest
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.True(m.Evaluate(Context));
+        Assert.False(m.Evaluate(Context));
     } 
     
     [Fact]
@@ -116,14 +128,14 @@ public class ConditionsTest
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.True(m.Evaluate(Context));
+        Assert.False(m.Evaluate(Context));
     }
 
     [Fact]
     public void MultiCondition_AddConditionArgumentIsNull()
     {
         MultiCondition m = new MultiCondition();
-        Assert.Throws<NullReferenceException>(() => m.AddCondition(null));
+        Assert.Throws<ArgumentNullException>(() => m.AddCondition(null));
     }
     
     [Fact]
@@ -144,6 +156,13 @@ public class ConditionsTest
         m.AddCondition(s);
         m.AddCondition(s);
         Assert.Contains(s, m.Conditions);
-        Assert.True(m.Conditions.Count == 2);
+        Assert.True(m.Conditions.Count == 1);
+    }
+    
+    [Fact]
+    public void MultiCondition_EvaluateArgumentIsNull()
+    {
+        MultiCondition s = new MultiCondition();
+        Assert.Throws<ArgumentNullException>(() => s.Evaluate(null));
     }
 }
