@@ -56,9 +56,4 @@ public class ContextDictionary : IContext
         Dictionary["log"] = msg;
         return this;
     }
-
-    public IEnumerable GetALlItems()
-    {
-        return Dictionary;
-    }
 }
