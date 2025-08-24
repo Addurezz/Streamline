@@ -1,9 +1,10 @@
 using System.Runtime.CompilerServices;
+using Moq;
 using Streamline.Core.Workflow;
 using Streamline.Core.Workflow.WorkflowContext;
 namespace Streamline.Tests;
 
-public class WorkflowContextMapTest
+public class ContextDictionaryTest
 {
     public static IEnumerable<object[]> KeyIsNullOrEmpty =>
         new List<object[]>
@@ -26,7 +27,7 @@ public class WorkflowContextMapTest
     [MemberData(nameof(KeyIsNullOrEmpty))]
     public void Add_KeyIsNullOrEmpty(string str, object obj)
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
 
         Assert.Throws<ArgumentNullException>(() => w.Add(str, obj));
     }
@@ -35,7 +36,7 @@ public class WorkflowContextMapTest
     [MemberData(nameof(KeyIsValid))]
     public void Add_KeyIsValid(string str, object obj)
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         w.Add(str, obj);
         Assert.Contains<string, object>(str, w.Dictionary);
     }
@@ -43,7 +44,7 @@ public class WorkflowContextMapTest
     [Fact]
     public void Add_SameKeyExists()
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         w.Add("a", new object());
         Assert.Throws<ArgumentException>(() => w.Add("a", "b"));
     }
@@ -51,7 +52,7 @@ public class WorkflowContextMapTest
     [Fact]
     public void Get_KeyNotFound()
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
 
         Assert.Throws<KeyNotFoundException>(() => w.Get("b"));
     }
@@ -64,7 +65,7 @@ public class WorkflowContextMapTest
     
     public void Get_KeyExists(string str, object obj)
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         w.Add(str, obj);
 
         Assert.Equal(obj, w.Get(str));
@@ -73,14 +74,14 @@ public class WorkflowContextMapTest
     [Fact]
     public void Edit_KeyNotFound()
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         Assert.Throws<KeyNotFoundException>(() => w.Edit("a", new object()));
     }
 
     [Fact]
     public void Edit_SuccessfulEdit()
     {
-        WorkflowContextMap w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         w.Add("a", new object());
         
         Assert.Equal(3, w.Edit("a", 3).Get("a"));
@@ -90,14 +91,14 @@ public class WorkflowContextMapTest
     [MemberData(nameof(KeyIsNullOrEmpty))]
     public void Add_Or_Edit_KeyIsNullOrEmpty(string key, object val)
     {
-        var w = new WorkflowContextMap();
+        var w = new ContextDictionary();
         Assert.Throws<ArgumentNullException>(() => w.Add_Or_Edit(key, val));
     }
 
     [Fact]
     public void Add_Or_Edit_SuccessfulAdd()
     {
-        var w = new WorkflowContextMap();
+        var w = new ContextDictionary();
         var o = new object();
         w.Add_Or_Edit("a", o);
         
@@ -108,7 +109,7 @@ public class WorkflowContextMapTest
     [Fact]
     public void Add_Or_Edit_SuccessfulEdit()
     {
-        var w = new WorkflowContextMap();
+        var w = new ContextDictionary();
         w.Add("a", new object());
         
         var o = new object();
@@ -121,7 +122,7 @@ public class WorkflowContextMapTest
     [Fact]
     public void Remove_KeyNotFound()
     {
-        var w = new WorkflowContextMap();
+        var w = new ContextDictionary();
 
         Assert.Throws<KeyNotFoundException>(() => w.Remove("a"));
     }
@@ -129,18 +130,18 @@ public class WorkflowContextMapTest
     [Fact]
     public void Remove_SuccessfulRemoval()
     {
-        var w = new WorkflowContextMap();
+        ContextDictionary w = new ContextDictionary();
         w.Add("a", new object());
-        
-        Assert.Contains<string, object>("a", ((WorkflowContextMap)w.Remove("a")).Dictionary);
+        w.Remove("a");
+        Assert.DoesNotContain("a", w.Dictionary);
     }
 
     [Fact]
     public void Log_Successful()
     {
-        var w = new WorkflowContextMap();
+        var w = new ContextDictionary();
         w.Log("msg");
         
-        Assert.Equal("msg", w.Get("log"));
+        Assert.Equal("msg\n", w.Get("log"));
     }
 }
