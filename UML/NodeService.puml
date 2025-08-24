@@ -4,37 +4,40 @@ package NodeService {
         -Next : List<INode>
         +Execute(context : WorkflowContext) : void
     }
-    interface ActionNode {
+       
+    interface IActionNode {
         
     }
-
-    class EndNode
+    
     class DecisionNode {
         +TrueNext : List<INode>
         +FalseNext : List<INode>
-        +Condition : Decision
+        +Decision : Condition
+        
+        +DecisionNode(decision : Condition)
     }
     
-    class SingleDecision {
-         + Evaluate() : bool
+    class SingleCondition {
+        - EvaluationLogic : Func<WorkflowContext, bool>
+        + SingleDecision(logic : Func<WorkflowContext, bool>)
+        + Evaluate() : bool
     }
     
-    class MultiDecision {
-        +DecisionList : List<SingleDecision>
+    class MultiCondition {
+        +Conditions : List<SingleCondition>
         +Evaluate() : bool
     }
     
-    class Decision {
+    class Condition {
         +Evaluate() : bool
     }
 
 }
 
-INode <|.. EndNode
-INode <|.. ActionNode
+INode <|.. IActionNode
 INode <|.. DecisionNode
-DecisionNode o-- Decision
-Decision <|-- SingleDecision 
-Decision <|-- MultiDecision
-MultiDecision o-- SingleDecision
+DecisionNode o-- Condition
+Condition <|-- SingleCondition 
+Condition <|-- MultiCondition
+MultiCondition o-- SingleCondition
 @enduml
