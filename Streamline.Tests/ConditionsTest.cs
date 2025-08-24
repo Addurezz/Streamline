@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.DataCollection;
 using Streamline.Core.Conditions;
 using Streamline.Core.Workflow.WorkflowContext;
+using Moq;
 namespace Streamline.Tests;
 
 
@@ -8,7 +9,6 @@ public class ConditionsTest
 {
     public Func<IContext, bool> TestConditionTrue = (context) => true;
     public Func<IContext, bool> TestConditionFalse = (context) => false;
-    public IContext Context = new WorkflowContextMap();
     
     [Fact]
     public void SingleCondition_DecisionIsNull()
@@ -27,33 +27,34 @@ public class ConditionsTest
     [Fact]
     public void SingleCondition_EvaluateAlwaysTrue()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         Condition s = new SingleCondition(TestConditionTrue);
-        Assert.True(s.Evaluate(Context));
+        Assert.True(s.Evaluate(mockContext.Object));
     }
     
     [Fact]
     public void SingleCondition_EvaluateAlwaysFalse()
     {
-        IContext context = new WorkflowContextMap();
+        Mock<IContext> mockContext = new Mock<IContext>();
         Condition s = new SingleCondition(TestConditionFalse);
-        Assert.False(s.Evaluate(Context));
+        Assert.False(s.Evaluate(mockContext.Object));
     }
 
     [Fact]
     public void SingleCondition_EvaluateIsTrueWithIntegers()
     {
-        IContext context = new WorkflowContextMap();
-        context.Add("x", 3);
-        context.Add("y", 4);
+        Mock<IContext> mockContext = new Mock<IContext>();
+        mockContext.Setup(c => c.Get("x")).Returns(3);
+        mockContext.Setup(c => c.Get("y")).Returns(5);
 
         Func<IContext, bool> fn = (c) =>
         {
-            return (int)c.Get("x") + (int)c.Get("y") == 7;
+            return (int)c.Get("x") + (int)c.Get("y") == 8;
         };
 
         SingleCondition s = new SingleCondition(fn);
         
-        Assert.True(s.Evaluate(context));
+        Assert.True(s.Evaluate(mockContext.Object));
     }
 
     [Fact]
@@ -78,57 +79,62 @@ public class ConditionsTest
     [Fact]
     public void MultiCondition_EvaluateWithSingleConditionIsTrue()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         MultiCondition m = new MultiCondition();
         SingleCondition s = new SingleCondition(TestConditionTrue);
         m.Conditions.Add(s);
         
-        Assert.True(m.Evaluate(Context));
+        Assert.True(m.Evaluate(mockContext.Object));
     } 
     
     [Fact]
     public void MultiCondition_EvaluateWithSingleConditionIsFalse()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         MultiCondition m = new MultiCondition();
         SingleCondition s = new SingleCondition(TestConditionFalse);
         m.Conditions.Add(s);
         
-        Assert.False(m.Evaluate(Context));
+        Assert.False(m.Evaluate(mockContext.Object));
     } 
     
     [Fact]
     public void MultiCondition_EvaluateConditionsIsTrue()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         MultiCondition m = new MultiCondition();
         SingleCondition s = new SingleCondition(TestConditionTrue);
         SingleCondition st = new SingleCondition(TestConditionTrue);
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.True(m.Evaluate(Context));
+        Assert.True(m.Evaluate(mockContext.Object));
     } 
     
     [Fact]
     public void MultiCondition_EvaluateConditionsIsFalse()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         MultiCondition m = new MultiCondition();
         SingleCondition s = new SingleCondition(TestConditionFalse);
         SingleCondition st = new SingleCondition(TestConditionFalse);
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.False(m.Evaluate(Context));
+        Assert.False(m.Evaluate(mockContext.Object));
     } 
     
     [Fact]
     public void MultiCondition_EvaluateWithDifferentConditionsIsFalse()
     {
+        Mock<IContext> mockContext = new Mock<IContext>();
         MultiCondition m = new MultiCondition();
         SingleCondition s = new SingleCondition(TestConditionTrue);
         SingleCondition st = new SingleCondition(TestConditionFalse);
         m.Conditions.Add(s);
         m.Conditions.Add(st);
         
-        Assert.False(m.Evaluate(Context));
+        Assert.False(m.Evaluate(mockContext.Object));
     }
 
     [Fact]
