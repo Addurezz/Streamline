@@ -134,4 +134,13 @@ public class WorkflowContextMapTest
         
         Assert.Contains<string, object>("a", ((WorkflowContextMap)w.Remove("a")).Dictionary);
     }
+
+    [Fact]
+    public void Log_Successful()
+    {
+        var w = new WorkflowContextMap();
+        w.Log("msg");
+        
+        Assert.Equal("msg", w.Get("log"));
+    }
 }
