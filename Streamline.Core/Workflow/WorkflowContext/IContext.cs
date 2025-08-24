@@ -1,4 +1,6 @@
 
+using System.Collections;
+
 namespace Streamline.Core.Workflow.WorkflowContext;
 
 public interface IContext
@@ -8,5 +10,5 @@ public interface IContext
     public IContext Add_Or_Edit(String str, Object obj);
     public IContext Remove(String str);
     public Object Get(String str);
-    public void Log(String m);
+    public IContext Log(String m);
 }
