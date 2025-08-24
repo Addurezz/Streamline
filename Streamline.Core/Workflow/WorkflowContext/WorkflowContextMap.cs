@@ -2,30 +2,32 @@ namespace Streamline.Core.Workflow.WorkflowContext;
 
 public class WorkflowContextMap : IContext
 {
-    private Dictionary<string, object> _dictionary = new Dictionary<string, object>();
-    public void Add(string str, object obj)
+    public Dictionary<string, object> Dictionary = new Dictionary<string, object>();
+    public IContext Add(string str, object obj)
     {
-        _dictionary[str] = obj;
+        Dictionary[str] = obj;
+        return this;
     }
 
-    public void Edit(string str, object obj)
+    public IContext Edit(string str, object obj)
     {
-        if (_dictionary.ContainsKey(str)) _dictionary[str] = obj;
+        if (Dictionary.ContainsKey(str)) Dictionary[str] = obj;
+        return this;
     }
 
-    public void Add_Or_Edit(string str, object obj)
+    public IContext Add_Or_Edit(string str, object obj)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
-    public void Remove(string str)
+    public IContext Remove(string str)
     {
-        throw new NotImplementedException();
+        return this;
     }
 
     public Object Get(string str)
     {
-        return _dictionary[str];
+        return Dictionary[str];
     }
 
     public void Log(string m)
